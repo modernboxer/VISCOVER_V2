@@ -158,20 +158,34 @@ ui <- dashboardPage(
                       width = 12,
                       tabPanel(
                         "Point Search",
-                        p("This is a shiny app tool designed for interacting with"),
-                        p("This tool can be used to obtain an intersection of CDL and SDL for any small area in the contiguous United States." ),
+                        p("The first extension function is used to search CDL categories for given NRI points from an Excel file."),
+                        p("Here are the steps you can follow:" ),
                         tags$ul(
-                          tags$li("Firstly, use the searchOSM or locateMe widget to zoom in to the area you're interested in."),
-                          tags$li("Secondly, use the draw tools on the left to draw a polygon/rectangle/circle on the map."),
-                          tags$li("Thirdly, unfold the 'Soil Data Layer' box under the map panel and click the 'update' button, then you'll be able to see the SDL information."),
-                          tags$li("Lastly, unfold the 'Cropland Data Layer' box and then you'll be able to see the tabulated CDL pixels which fall within the red bounding box or the selected map units.")
+                          tags$li("Firstly, put the NRI points' information in an Excel file with position variables named as 'lat' and 'lon'."),
+                          tags$li("Secondly, upload the Excel file by clicking the 'Browse'  button. "),
+                          tags$li("Thirdly, choose the years you want to search for all the points."),
+                          tags$li("Lastly, click the 'Upload' button to obtain the table of the CDL categroies for NRI points.")
                         ),
-                        p("About the author:", tags$a(href = "http://annielyu.com", "Xiaodan Lyu")),
-                        p("Acknowledgement: special thanks to", tags$a(href = "http://hofmann.public.iastate.edu/", "Dr. Heike Hofmann"), 
-                          "and Dr. Emily Berg for their valuable advice.")
+                        p("Remark: you can download the table by clicking the 'CSV', 'Excel' or 'PDF' as your preference. ")
                       ),
                       tabPanel(
                         "County/State Search",
+                        p("The second extension function can let you check the existence of any type of NRI category in a given county/state."),
+                        tags$ul(
+                          tags$li("Firstly, choose the State, County, Year and NRI categories."),
+                          tags$li("Secondly, click the 'Update' button to create the table. Above the table, there are three search panes: 'Year',
+                          'county', 'NRI_categ'. You can click the values in each pane to get a subset table as you want."),
+                          tags$li("Finally, look at the 'Freq' column to see whether the NRI cropland category exist in that county/state for a given year.
+                                  The 'detail' column lists the detailed information of CDL pixels that categoried as that NRI category.  ")
+                        ),
+                        p("Remark:"),
+                        tags$ol(
+                          tags$li("You can select multiple choices for County, Year, and NRI categories. For example, 
+                                  you can choose Iowa state, Story and Polk counties, 2019 and 2018 as years, Rice and Soybeans as Categories"),
+                          tags$li("To choose the whole state, choose the abbreviation of the state under county choices, e.g. IA for Iowa."),
+                          tags$li("If you only want to check some new NRI categories but do not need to change counties and years, you can 
+                                  add new choices for the cropland types and the table will automatically update.")
+                        )
                         )
                     )
                 )
@@ -188,7 +202,7 @@ ui <- dashboardPage(
                                          "text/comma-separated-values,text/plain",
                                          ".xlsx")),
                     column(width = 5,
-                           selectInput("choose_year", "Choose the years:",
+                           selectInput("point_lv_year", "Choose the years:",
                                        choices = lastyr:1997, multiple = TRUE)),
                     fluidRow(width = 12, 
                              DT::dataTableOutput("tbl_NRI_listp") %>% withSpinner()),
@@ -256,8 +270,8 @@ server <- function(input, output, session) {
     
     NRIlistp <- readxl::read_excel(input$file1$datapath)
     df_var <- names(NRIlistp)
-    year <- gsub("[^0-9.-]", " ", input$choose_year) %>% strsplit(., " ") %>% unlist %>% as.numeric()
-    year <- year[is.na(year)== FALSE & year >=1997 & year <=lastyr] %>% sort(., decreasing = TRUE)
+    year <- input$point_lv_year %>% as.numeric()
+   #  year <- year[is.na(year)== FALSE & year >=1997 & year <=lastyr] %>% sort(., decreasing = TRUE)
     lat <- NRIlistp$lat
     lon <- NRIlistp$lon
     

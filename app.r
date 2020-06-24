@@ -1,3 +1,10 @@
+# check the packges and install the missing ones 
+list.of.packages <- c("shiny", "shinycssloaders", "shinydashboard", "shinyWidgets", 
+                      "plotly", "DT", "leaflet", "leaflet.extras", "tidyr", "dplyr", 
+                      "tibble", "sp", "rgdal", "maps", "raster", "sf", "RCurl")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
 ## load packages
 library(shiny);library(shinycssloaders);library(shinydashboard);library(shinyWidgets)
 library(plotly);library(DT)

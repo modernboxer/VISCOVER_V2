@@ -267,13 +267,12 @@ server <- function(input, output, session) {
     inFile <- input$file1
     if(is.null(inFile))
       return(NULL)
-    
     NRIlistp <- readxl::read_excel(input$file1$datapath)
     df_var <- names(NRIlistp)
-    year <- input$point_lv_year %>% as.numeric()
+    year <- input$point_lv_year %>% as.numeric() %>% sort(., decreasing = TRUE)
    #  year <- year[is.na(year)== FALSE & year >=1997 & year <=lastyr] %>% sort(., decreasing = TRUE)
-    lat <- NRIlistp$lat
-    lon <- NRIlistp$lon
+    lat <- NRIlistp$lat %>% gsub("[^0-9.-]", " ", .) %>% as.numeric()
+    lon <- NRIlistp$lon %>% gsub("[^0-9.-]", " ", .) %>% as.numeric()
     
     for(j in year)
     {

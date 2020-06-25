@@ -1,7 +1,7 @@
 # check the packges and install the missing ones 
 list.of.packages <- c("shiny", "shinycssloaders", "shinydashboard", "shinyWidgets", 
                       "plotly", "DT", "leaflet", "leaflet.extras", "tidyr", "dplyr", 
-                      "tibble", "sp", "rgdal", "maps", "raster", "sf", "RCurl")
+                      "tibble", "sp", "rgdal", "maps", "raster", "sf", "RCurl","XML")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 

@@ -273,6 +273,7 @@ server <- function(input, output, session) {
   NRIlistp <- eventReactive(input$getNRIp, {
     inFile <- input$file1
     if(is.null(inFile))
+      ### just test
       return(NULL)
     NRIlistp <- readxl::read_excel(input$file1$datapath)
     df_var <- names(NRIlistp)
